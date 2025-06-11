@@ -1,0 +1,23 @@
+services:
+  mi-app:
+    image: '${DOCKER_USERNAME}/your-pipeline:latest'
+    container_name: mi-app
+    restart: always
+    ports:
+      - '5050:5050'
+    labels:
+      - 'com.centurylinklabs.watchtower.enable=true'
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=60
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - DOCKER_CONFIG=/config.json
+    env_file:
+      - .env
